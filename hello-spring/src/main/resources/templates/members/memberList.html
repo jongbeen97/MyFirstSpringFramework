@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- (AI 수정) 회원 목록 디자인 개선 및 삭제 기능 추가 -->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원 목록</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        // (AI 수정) 회원 삭제 확인 및 요청 전송
+        function deleteMember(id) {
+            if (confirm("정말로 회원을 삭제하시겠습니까?")) {
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "/members/delete");
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "id");
+                hiddenField.setAttribute("value", id);
+
+                form.appendChild(hiddenField);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>회원 목록</h2>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">이름</th>
+            <th scope="col">관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.id}"></td>
+            <td th:text="${member.name}"></td>
+            <td>
+                <!-- (AI 수정) 삭제 버튼 추가 -->
+                <button class="btn btn-danger btn-sm"
+                        th:onclick="'deleteMember(' + ${member.id} + ')'">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+        <a href="/" class="btn btn-primary">홈으로</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

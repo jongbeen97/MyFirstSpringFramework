@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- 타임리프 사용 이유 : P 태그에 안에 들어갈 값이 이 안에 있는 문자열로 처리가 된다 -->
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2> 회원 정보</h2>
+    <p th:text="'안녕하세요 ' +${name}"></p>
+    <!-- 혹은 -->
+    <p th:text="|안녕하세요  ${name}|"></p>
+</body>
+</html>
