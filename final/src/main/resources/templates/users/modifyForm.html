@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!-- 회원 가입 페이지. 'layout/default.html'를 레이아웃으로 사용-->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 가입</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h2>회원 가입</h2>
+            <form th:action="@{/users/signup}" method="post">
+                <div class="mb-3">
+                    <label for="userpw" class="form-label">비밀번호</label>
+                    <input type="password" class="form-control" id="userpw" name="password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="useremail" class="form-label">이메일</label>
+                    <input type="email" class="form-control" id="useremail" name="email" >
+                </div>
+                <button type="submit" class="btn btn-primary">회원 정보 수정 완료</button>
+                <button type="submit" class="btn btn-primary">회원 정보 수정 취소</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

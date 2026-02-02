@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>My App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header>현재시간</header>
+<div id="currentTime"></div>
+<nav class="navbar navbar-expand navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Home</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"  th:if="${session.loginUser == null}">
+                    <!-- 로그인 하지 않은 상태 -->
+                    <a class="nav-link" th:href="@{/users/login}">로그인</a>
+                </li>
+                <li class="nav-item" th:if="${session.loginUser == null}">
+                    <!-- 로그인 하지 않은 상태 -->
+                    <a class="nav-link" th:href="@{/users/signup}">회원가입</a>
+                </li>
+                <li class="nav-item" th:if="${session.loginUser != null}">
+                    <!-- 로그인을 한 상태 -->
+                    <span class="navbar-text" th:text="|${session.loginUser.name}님 환영합니다.|"></span>
+                </li>
+                <li class="nav-item" th:if="${session.loginUser != null}">
+                    <!-- 로그인을 한 상태 -->
+                    <a class="nav-link" th:href="@{/users/logout}">로그아웃</a>
+                </li>
+                <li class="nav-item" th:if="${session.loginUser != null}">
+                    <!-- 로그인을 한 상태 -->
+                    <a class="nav-link" th:href="@{/users/delete}" >회원탈퇴</a>
+                    <!-- onclick="return confirm('정말로 탈퇴하시겠습니까?');" 알림 띄우기 -->
+                </li>
+                <li class="nav-item" th:if="${session.loginUser != null}">
+                    <!-- 로그인을 한 상태 -->
+                    <a class="nav-link" th:href="@{/users/modify}">회원정보수정</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div layout:fragment="content" class="container mt-4">
+    <!-- 화면이 삽입되는 부분 -->
+</div>
+
+<footer class="footer mt-auto py-3 bg-light text-center">
+    <div class="container">
+        <span class="text-muted">&copy;2026 My App</span>
+    </div>
+</footer>
+<script>
+    function updateClock() {
+      const now = new Date();
+
+      const month = now.getMonth() + 1;
+      const date = now.getDate();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const second = now.getSeconds();
+
+      const timeString = `${month}월 ${date}일 ${hour}시 ${minute}분 ${second}초`;
+      document.getElementById("currentTime").innerText = timeString;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
