@@ -5,10 +5,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 @Data
 public class Board {
-    private long bid;
+    private long bno;
     private String title;
     private String content;
-    private String writer;
+    private String writter;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 

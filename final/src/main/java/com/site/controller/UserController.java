@@ -68,6 +68,7 @@ public class UserController {
         if (user != null) {
             //로그인 성공 : 세션을 생성해서 거기에 사용자 정보를 저장해야 , 제가 계속 종빈님으로 갈 것이다.
             HttpSession session = request.getSession();
+            // 사용자 세션을 유저로 저장
             session.setAttribute("loginUser", user); // 여기서는 문제점이 있음 . 단점이 존재 : 사용자 정보에 세션이 노출이 됨.
             return "redirect:/";
         } else {
@@ -108,7 +109,7 @@ public class UserController {
     4. session.getAttribute("loginUser"): 세션에 저장된 로그인 사용자 정보(User 객체)를 가져옴.
     5. userService.remove(user.getId()): 서비스 계층을 호출하여 DB에서 해당 ID의 회원 정보를 삭제.
     6. session.invalidate(): 회원 탈퇴 후 로그아웃 처리를 위해 세션을 무효화(삭제).
-    7. rttr.addFlashAttribute(...): 리다이렉트된 페이지에서 한 번만 사용할 수 있는 데이터를 저장.
+    7. rttr.addFlaushAttribte(...): 리다이렉트된 페이지에서 한 번만 사용할 수 있는 데이터를 저장.
      */
 
     // 회원 탈퇴 기능
@@ -126,11 +127,13 @@ public class UserController {
         return "redirect:/";
     }
 
-    //회원 정보 수정 기능
+
+    //회원 정보 수정 기능 ,회원 정보 수정 폼을 보여주는 메서드
     @GetMapping("/modify")
     public String modifyForm(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if (session != null) {
+            // 현재 로그인 상태 여부 판별
             User user = (User) session.getAttribute("loginUser");
             if (user != null) {
                 model.addAttribute("user", user);
@@ -140,6 +143,45 @@ public class UserController {
 
         }
         return "redirect:/";
+    }
+
+    @PostMapping("/modify")//포스트 방식 ( 사용자가 입력을 하면 이 정보를 DB에 전달 ) 메서드 실행
+    public String modify(User user, HttpServletRequest request, RedirectAttributes rttr) {
+/*
+        // User user :  폼에서 전송된 데이터가 자동으로 User  객체에 바인딩해서 user객체로 만듦
+        // HttpServletRequest request : HTTP 요청 정보를 담는 객체로 세션에 접근하기 위해서 사용합니다.
+        // RedirectAttributes rttr : 리다이렉트 시 데이터를 전달하기 위한 객체
+ */
+        // request.getSession(false); 현재 가지고 있는 세션을 HttpSession session 에 가져옴.
+        // false 라면 세션이 없다면 새로 생성하지 않고null 반환
+        // true 라면 세션이 없으면 새로 생성하기
+        HttpSession session = request.getSession(false);
+        if (session != null) { // 세션이 존재한다면 로그인한 유저를 꺼내기
+            User loginUser = (User) session.getAttribute("loginUser"); // 세션에서 로그인 유저라는 이름으로 가져온다. 세션에
+            if (loginUser != null) { // 로그인 상태
+                // 세션에 있는 아이디를 가져와서 수정할 객체에 설정 (아이디는 수정 불가하므로)
+                user.setId(loginUser.getId()); // 폼에서 전송된 유저 객체에 세션의 아이디를 강제로 설정
+                // 사용자가 HTML을 조작해서 다른 사람의 아이디 수정을 방지 하기 위해서 .
+                userService.modify(user); // 유저 서비스의 모디파이 로 가서 수정을 해줌.
+                // 서비스 계층을 호출해 , 실제 데이터베이스의 사용자 정보 업데이트 .
+                
+                // 수정된 정보를 세션에 다시 저장 (선택 사항, 하지만 권장)
+                loginUser.setPassword(user.getPassword());
+                loginUser.setEmail(user.getEmail());
+                session.setAttribute("loginUser", loginUser);
+
+                rttr.addFlashAttribute("msg", "회원정보 수정이 완료되었습니다.");
+                /*
+                Flash 속성 추가: 리다이렉트 후 한 번만 사용되고 사라지는 일회성 메시지
+                주로 성공/실패 메시지를 전달할 때 사용
+                 */
+            }
+        }
+        return "redirect:/";
+        /*
+        홈페이지("/")로 리다이렉트
+        "redirect:" 접두사는 브라우저에게 새로운 요청을 하도록 지시
+         */
     }
 }
 

@@ -33,7 +33,8 @@
                 </li>
                 <li class="nav-item" th:if="${session.loginUser != null}">
                     <!-- 로그인을 한 상태 -->
-                    <a class="nav-link" th:href="@{/users/delete}" >회원탈퇴</a>
+                    <a class="nav-link" th:href="@{/users/delete}"
+                       onclick="return confirm('정말로 탈퇴하시겠습니까?');">회원탈퇴</a>
                     <!-- onclick="return confirm('정말로 탈퇴하시겠습니까?');" 알림 띄우기 -->
                 </li>
                 <li class="nav-item" th:if="${session.loginUser != null}">

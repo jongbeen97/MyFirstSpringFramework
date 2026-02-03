@@ -15,7 +15,7 @@
     </select>
     <insert id="save" parameterType="com.site.domain.User">
         INSERT INTO user (id, password, name, email)
-        VALUES (#{id}, #{password}, #{name}, #{email})
+        VALUES (#{id}, #{password}, #{name}, #{email, jdbcType=VARCHAR})
     </insert>
     <update id="update" parameterType="com.site.domain.User">
         UPDATE user
